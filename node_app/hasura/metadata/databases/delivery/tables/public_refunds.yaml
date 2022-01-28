@@ -1,0 +1,7 @@
+table:
+  name: refunds
+  schema: public
+configuration:
+  custom_column_names:
+    id: _id
+  custom_root_fields: {}

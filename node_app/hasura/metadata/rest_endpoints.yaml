@@ -1,0 +1,99 @@
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Alerts: Approve'
+  url: alerts/:id/approve
+  methods:
+  - PATCH
+  name: 'Alerts: Approve'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Alert: Flag Alert'
+  url: alerts/:id/flag
+  methods:
+  - PATCH
+  name: 'Alert: Flag Alert'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Alert: Reject Alert'
+  url: alerts/:id/reject
+  methods:
+  - PATCH
+  name: 'Alert: Reject Alert'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Coupon: Get All Inactive'
+  url: coupon/inactive
+  methods:
+  - GET
+  name: 'Coupon: Get All Inactive'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_coupon
+  url: coupons
+  methods:
+  - POST
+  name: insert_coupon
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Coupon: Get All'
+  url: coupons
+  methods:
+  - GET
+  name: 'Coupon: Get All'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Coupon: Update'
+  url: coupons/:_id
+  methods:
+  - PATCH
+  name: 'Coupon: Update'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Coupon: Get All Active'
+  url: coupons/active
+  methods:
+  - GET
+  name: 'Coupon: Get All Active'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: create coupon
+  url: create-coupon
+  methods:
+  - POST
+  name: create coupon
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: 'Drivers: Available'
+  url: drivers/available
+  methods:
+  - GET
+  name: 'Drivers: Available'
+  comment: null
+- definition:
+    query:
+      collection_name: allowed-queries
+      query_name: refunds
+  url: refunds
+  methods:
+  - POST
+  name: refunds
+  comment: null

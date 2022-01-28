@@ -1,0 +1,13 @@
+table:
+  name: store_addresses
+  schema: public
+object_relationships:
+- name: store_address
+  using:
+    manual_configuration:
+      column_mapping:
+        foreign_key: id
+      insertion_order: null
+      remote_table:
+        name: stores
+        schema: public

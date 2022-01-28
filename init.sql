@@ -1,0 +1,2 @@
+CREATE DATABASE delivery;
+CREATE DATABASE hasura;

@@ -1,0 +1,104 @@
+version: '2.4'
+
+services:
+  api:
+    build:
+      context: ./retool
+      dockerfile: Dockerfile
+    env_file: .env
+    depends_on:
+      - postgres
+    command: bash -c "./docker_scripts/wait-for-it.sh postgres:5432; ./docker_scripts/start_api.sh"
+    links:
+      - postgres
+    ports:
+      - '3000:3000'
+    restart: on-failure
+    volumes:
+      - ./keys:/root/.ssh
+      - ssh:/retool_backend/autogen_ssh_keys
+      - ./retool:/usr/local/retool-git-repo
+  node_app:
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/delivery
+    build:
+      context: ./node_app
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    # you can use legacy debug config or new inspect
+    # NOTE: if nodemon isn't restarting on changes, you might be on Windows
+    # which has trouble seeing file changes, so add -L to use legacy polling
+    # https://github.com/remy/nodemon#application-isnt-restarting
+    #command: ../node_modules/.bin/nodemon --debug=0.0.0.0:5858
+    # command: ../node_modules/.bin/nodemon --inspect=0.0.0.0:9229 ./bin/www
+    ports:
+      - "3001:3001"
+      - "9229:9229"
+      - "9230:9230"
+    volumes:
+      - ./node_app:/opt/node_app/app:delegated
+      # bind-mounting these two files in will let you add packages during development without rebuilding
+      # for example, to add bower to your app while developing, just install it inside the container
+      # and then nodemon will restart. Your changes will last until you "docker-compose down" and will
+      # be saved on host for next build
+      # NOTE: this won't work on Docker Toolbox (virtualbox) which doesn't bind-mount single files
+      # docker-compose exec node npm install --save bower
+      - ./node_app/package.json:/opt/node_app/package.json
+      - ./node_app/pnpm-lock.yaml:/opt/node_app/pnpm-lock.yaml
+      # this is a workaround to prevent host node_modules from accidently getting mounted in container
+      # in case you want to use node/npm both outside container for test/lint etc. and also inside container
+      # this will overwrite the default node_modules dir in container so it won't conflict with our
+      # /opt/node_app/node_modules location. Thanks to PR from @brnluiz
+      - notused:/opt/node_app/app/node_modules
+    depends_on:
+      - postgres
+      - graphql-engine
+    restart: on-failure
+    healthcheck:
+      disable: true
+
+  graphql-engine:
+    image: hasura/graphql-engine:v2.0.9.cli-migrations-v3
+    ports:
+    - "8080:8080"
+    volumes:
+      - ./node_app/hasura/migrations:/hasura-migrations
+      - ./node_app/hasura/metadata:/hasura-metadata
+    restart: always
+    env_file: .env
+    depends_on:
+      - postgres
+    environment:
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/hasura
+      HASURA_GRAPHQL_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/delivery
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_CORS_DOMAIN: "*"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+  postgres:
+    image: 'postgis/postgis:13-master'
+    env_file: .env
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  nginx: 
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+volumes:
+  notused:
+  ssh:
+  data:

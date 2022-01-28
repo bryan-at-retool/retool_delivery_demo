@@ -1,0 +1,3 @@
+table:
+  name: available_drivers
+  schema: public

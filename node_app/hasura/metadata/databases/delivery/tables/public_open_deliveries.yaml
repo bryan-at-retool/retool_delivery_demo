@@ -1,0 +1,3 @@
+table:
+  name: open_deliveries
+  schema: public

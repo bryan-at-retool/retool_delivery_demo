@@ -1,0 +1,47 @@
+{
+  "name": "mocha-chai-knex",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev-docker": "../node_modules/nodemon/bin/nodemon.js --debug=5858",
+    "dev-host": "nodemon --debug=5858",
+    "start-watch": "nodemon index.js --inspect=0.0.0.0:9229",
+    "start-wait-debuger": "nodemon index.js --inspect-brk=0.0.0.0:9229",
+    "test": "cross-env NODE_ENV=test PORT=8081 mocha --timeout 10000 --exit --inspect=0.0.0.0:9230",
+    "test-watch": "nodemon --exec \"npm test\"",
+    "test-wait-debuger": "cross-env NODE_ENV=test PORT=8081 mocha --no-timeouts --exit --inspect-brk=0.0.0.0:9230"
+  },
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.1.16",
+    "@looker/sdk": "^21.20.0",
+    "@looker/sdk-node": "^21.20.0",
+    "@mapbox/polyline": "^1.1.1",
+    "chai": "^4.3.3",
+    "chai-http": "^4.3.0",
+    "cookie-parser": "~1.4.5",
+    "debug": "~4.3.1",
+    "express": "~4.17.1",
+    "faker": "^5.5.3",
+    "helmet": "^4.4.1",
+    "http-errors": "~1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.0",
+    "lodash": "^4.17.21",
+    "mocha": "^8.3.0",
+    "moment": "^2.29.1",
+    "morgan": "~1.10.0",
+    "node-cron": "^3.0.0",
+    "pg": "^8.5.1",
+    "probability-distributions": "^0.9.1",
+    "pug": "~3.0.2",
+    "random-points-on-polygon": "^0.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
+  }
+}

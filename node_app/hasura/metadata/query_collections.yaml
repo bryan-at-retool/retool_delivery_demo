@@ -1,0 +1,135 @@
+- name: allowed-queries
+  definition:
+    queries:
+    - name: create coupon
+      query: |-
+        mutation coupons($campaign_id: Int, $category: String = "", $code: String, $coupon_amount: numeric, $coupon_type: String, $expires_at: timestamptz, $name: String) {
+          insert_coupons_one(object: {campaign_id: $campaign_id, code: $code, coupon_amount: $coupon_amount, coupon_type: $coupon_type, expires_at: $expires_at, name: $name, category: $category}, on_conflict: {constraint: coupons_pkey}) {
+            _id
+            name
+            code
+            coupon_amount
+            coupon_type
+            expires_at
+            category
+          }
+        }
+    - name: insert_coupon
+      query: |-
+        mutation coupons($campaign_id: Int, $category: String = "", $code: String, $coupon_amount: numeric, $coupon_type: String, $expires_at: timestamptz, $name: String) {
+          insert_coupons_one(object: {campaign_id: $campaign_id, code: $code, coupon_amount: $coupon_amount, coupon_type: $coupon_type, expires_at: $expires_at, name: $name, category: $category}, on_conflict: {constraint: coupons_pkey}) {
+            _id
+            name
+            code
+            coupon_amount
+            coupon_type
+            expires_at
+            category
+          }
+        }
+    - name: refunds
+      query: |-
+        mutation refunds($category: String="",  $credit_amount: numeric, $order_id: Int, $other_description: String, $reason: String, $updated_at: timestamptz, $user_id: Int ) {
+          insert_refunds_one(object: {category: $category, credit_amount: $credit_amount, order_id: $order_id, other_description: $other_description, reason: $reason, updated_at: $updated_at, user_id: $user_id}, on_conflict: {constraint: credits_pkey}) {
+            _id
+            category
+            credit_amount
+            order_id
+            other_description
+            reason
+            updated_at
+            user_id
+          }
+        }
+    - name: 'Alert: Flag Alert'
+      query: |-
+        mutation MyMutation($id: Int!) {
+          update_alerts_by_pk(pk_columns: {id: $id}, _set: {status: "Flagged"}) {
+            id
+            status
+          }
+        }
+    - name: 'Alert: Reject Alert'
+      query: |-
+        mutation MyMutation($id: Int!) {
+          update_alerts_by_pk(pk_columns: {id: $id}, _set: {status: "Rejected"}) {
+            id
+            status
+          }
+        }
+    - name: 'Alerts: Approve'
+      query: |-
+        mutation MyMutation($id: Int!) {
+          update_alerts_by_pk(pk_columns: {id: $id}, _set: {status: "Approved"}) {
+            id
+            status
+          }
+        }
+    - name: 'Coupon: Get All'
+      query: |-
+        query MyQuery {
+          coupons {
+            _id
+            campaign_id
+            category
+            code
+            coupon_amount
+            coupon_type
+            created_at
+            expires_at
+            name
+            updated_at
+          }
+        }
+    - name: 'Coupon: Get All Active'
+      query: |-
+        query MyQuery {
+          coupons(where: {expires_at: {_gte: "now()"}}) {
+            _id
+            campaign_id
+            category
+            code
+            coupon_amount
+            coupon_type
+            created_at
+            expires_at
+            name
+            updated_at
+          }
+        }
+    - name: 'Coupon: Get All Inactive'
+      query: |-
+        query MyQuery {
+          coupons(where: {expires_at: {_lt: "now()"}}) {
+            _id
+            campaign_id
+            category
+            code
+            coupon_amount
+            coupon_type
+            created_at
+            expires_at
+            name
+            updated_at
+          }
+        }
+    - name: 'Coupon: Update'
+      query: |-
+        mutation MyMutation($_id: Int!, $category: String) {
+          update_coupons_by_pk(pk_columns: {_id: $_id}, _set: {category: $category}) {
+            _id
+            category
+            code
+            coupon_amount
+            coupon_type
+            name
+          }
+        }
+    - name: 'Drivers: Available'
+      query: |-
+        query MyQuery {
+          available_drivers {
+            id
+            full_name
+          }
+        }
